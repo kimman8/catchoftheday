@@ -44,7 +44,7 @@ class EditFishForm extends React.Component {
           type="text"
           name="image"
           onChange={this.handleChange}
-          value={this.props.fish.text}
+          value={this.props.fish.image}
         />
       </div>
     );
