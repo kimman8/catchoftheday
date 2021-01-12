@@ -1,12 +1,16 @@
 import React from "react";
+import PropTypes from "prop-types";
 import Header from "./Header";
 import Order from "./Order";
 import Inventory from "./Inventory";
-import sampleFishes from "../sample-fishes";
 import Fish from "./Fish";
 import base from "../base";
+import sampleFishes from "../sample-fishes";
 
 class App extends React.Component {
+  static propTypes = {
+    match: PropTypes.object,
+  };
   state = {
     fishes: {},
     order: {},
@@ -16,8 +20,6 @@ class App extends React.Component {
     //first reinstate the local storage
     const localStorageRef = localStorage.getItem(params.storeId);
     if (localStorageRef) {
-      console.log("restoring it!");
-      console.log(JSON.parse(localStorageRef));
       this.setState({ order: JSON.parse(localStorageRef) });
     }
     this.ref = base.syncState(`${params.storeId}/fishes`, {
@@ -46,11 +48,11 @@ class App extends React.Component {
     this.setState({ fishes });
   };
 
-  updateFish = (key, udpatedFish) => {
+  updateFish = (key, updatedFish) => {
     //1.take a copy of the current state
     const fishes = { ...this.state.fishes };
     //2.update that state
-    fishes[key] = this.updateFish;
+    fishes[key] = updatedFish;
     //3.set that to state
     this.setState({ fishes });
   };
@@ -87,12 +89,12 @@ class App extends React.Component {
     return (
       <div className="catch-of-the-day">
         <div className="menu">
-          <Header tagline="fresh seafood market" />
+          <Header tagline={"fresh seafood market"} />
           <ul className="fishes">
             {Object.keys(this.state.fishes).map((key) => (
               <Fish
                 key={key}
-                index={key}
+                history={key}
                 details={this.state.fishes[key]}
                 addToOrder={this.addToOrder}
               />
@@ -110,6 +112,7 @@ class App extends React.Component {
           deleteFish={this.deleteFish}
           loadSampleFishes={this.loadSampleFishes}
           fishes={this.state.fishes}
+          storeId={this.props.match.params.storeId}
         />
       </div>
     );
